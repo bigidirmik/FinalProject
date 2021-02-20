@@ -25,11 +25,42 @@ namespace WebAPI.Controllers
             _productService = productService;
         }
 
-        [HttpGet]
-        public List<Product> Get()
+        [HttpGet("getall")]
+        public IActionResult GetAll() //GET
         {
-            var result = _productService.GetAll();
-            return result.Data;
+            //Swagger - Hazır dökümantasyon imkanı sunar.
+            var result = _productService.GetAll(); // Get yerine GetAll() yaptık.
+            if (result.Success)
+            {
+                return Ok(result); //result.Data sadece data verir, message ve success bilgisi vermez. tercihen sadece result yazdım
+            }
+            return BadRequest(result);//result.Message sadece mesaj verir, data ve success bilgisi vermez. tercihen sadece message yazdım
+        }
+
+        // İki HttpGet olunca:
+        // [HttpGet] 500 hatası verir, birinci yöntem [HttpGet(id)] olarak yazıp id alacağını belirtmektir.
+        // İkinci yöntem parantezli tırnak (" ") içinde isim vermektir. [HttpGet("getall")]
+        // ikinci yöntem tercih edilir
+        [HttpGet("getbyid")]
+        public IActionResult GetById(int id) // Get yerine GetById() yaptık.
+        {
+            var result = _productService.GetById(id);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        [HttpPost("add")] // silme ve güncelleme için de çoğunlukla bu kullanılır. // tercihen silme için httpdelete güncelleme için put kullanabilirsin.
+        public IActionResult Add(Product product) //POST ekleyeciğimiz şey product olduğu için belirttik // Post yerine Add() yaptık.
+        {
+            var result = _productService.Add(product);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
         }
     }
 }
