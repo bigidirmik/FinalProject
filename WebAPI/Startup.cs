@@ -32,9 +32,12 @@ namespace WebAPI
             // bu yapýyý farklý mimariye taþýyacaðýz
             //Autofac, Ninject, Castlewindsor, StructureMap, LightInject, DryInject --> IoC yapýsý yokken de bunlar ile bu yapý kurulurdu.
             //AOP - Autofac en iyi AOP imkanýný sunar.
+            // Cross Cutting Concerns - Uygulamayý dikine kesen ilgi alanlarý
+            //(örn: loglama,cache,transaction:performans,authorization (arayüz doðrulama,data doðrulama, business...))
+
             services.AddControllers();
-            services.AddSingleton<IProductService,ProductManager>();
-            services.AddSingleton<IProductDal,EfProductDal>();
+            //services.AddSingleton<IProductService,ProductManager>();
+            //services.AddSingleton<IProductDal,EfProductDal>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

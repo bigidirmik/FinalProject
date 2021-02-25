@@ -1,9 +1,13 @@
 ﻿using Business.Abstract;
 using Business.Constants;
+using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Validation;
+using Core.CrossCuttingConcerns.Validation;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.DTOs;
+using FluentValidation;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -19,14 +23,31 @@ namespace Business.Concrete
             _productDal = productDal;
         }
 
+        [ValidationAspect(typeof(ProductValidator))]
         public IResult Add(Product product)
         {
             // business codes (her şey geçerli ise ekle, değil ise ekleme gibi)
             // Magic strings
-            if (product.ProductName.Length<2)
-            {
-                return new ErrorResult(Messages.ProductNameInvalid);
-            }
+            //validation (business code ile ayrıdır!)
+
+            //ProductValidator'da yazıldığı için sildik. (comment'ledik)
+            //if (product.ProductName.Length<2)
+            //{
+            //    return new ErrorResult(Messages.ProductNameInvalid);
+            //}
+
+            //ProductValidation çalıştırmak için yeni kod ise bu. (Bu da refactor edilecek)
+            //var context = new ValidationContext<Product>(product);
+            //ProductValidator productValidator = new ProductValidator();
+            //var result = productValidator.Validate(context);
+            //if (!result.IsValid)
+            //{
+            //    throw new ValidationException(result.Errors);
+            //}
+
+            //üstteki kodu core'daki concern.validation içine aldık, objektif parametreler ekledik (refactor ettik)
+            //ValidationTool.Validate(new ProductValidator(), product);
+            //Bu koda da gerek kalmadı, metot üzerinde ValidationAspect olarak aynı şeyi yaptık.
 
             _productDal.Add(product);
 
