@@ -9,11 +9,12 @@ using System.Text;
 
 namespace Core.Aspects.Autofac.Validation
 {
-    public class ValidationAspect : MethodInterception
+    public class ValidationAspect : MethodInterception //Aspect: Metodun başında, sonunda, hata verdiğinde çalışacak yapı.
     {
         private Type _validatorType;
         public ValidationAspect(Type validatorType)
         {
+            //defensive coding : savunma odaklı, kullanıcı her şeyi atribute olarak yazamasın sadece IValidator olanları yazabilsin diye
             if (!typeof(IValidator).IsAssignableFrom(validatorType))
             {
                 throw new System.Exception("Bu bir doğrulama sınıfı değil!");
