@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Business.BusinessAspects.Autofac;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
@@ -51,7 +52,8 @@ namespace Business.Concrete
         //üstteki kodu core'daki concern.validation içine aldık, objektif parametreler ekledik (refactor ettik)
         //ValidationTool.Validate(new ProductValidator(), product);
         //Bu koda da gerek kalmadı, metot üzerinde ValidationAspect olarak aynı şeyi yaptık.
-
+        // Claim
+        [SecuredOperation("product.add,admin")]
         [ValidationAspect(typeof(ProductValidator))]
         public IResult Add(Product product)
         {
