@@ -16,6 +16,7 @@ namespace Core.Utilities.Interceptors
             var methodAttributes = type.GetMethod(method.Name)
                 .GetCustomAttributes<MethodInterceptionBaseAttribute>(true);
             classAttributes.AddRange(methodAttributes);
+            // performance aspect'i üstteki gibi buraya eklersek tüm sistem için çalışır. Loglama da aynı şekilde. her metot için yazmak gerekmez.
 
             return classAttributes.OrderBy(x => x.Priority).ToArray();
         }

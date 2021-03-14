@@ -2,6 +2,9 @@
 using Business.BusinessAspects.Autofac;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Caching;
+using Core.Aspects.Autofac.Performance;
+using Core.Aspects.Autofac.Transaction;
 using Core.Aspects.Autofac.Validation;
 using Core.CrossCuttingConcerns.Validation;
 using Core.Utilities.Business;
@@ -53,8 +56,10 @@ namespace Business.Concrete
         //ValidationTool.Validate(new ProductValidator(), product);
         //Bu koda da gerek kalmadı, metot üzerinde ValidationAspect olarak aynı şeyi yaptık.
         // Claim
+        
         [SecuredOperation("product.add,admin")]
         [ValidationAspect(typeof(ProductValidator))]
+        [CacheRemoveAspect("IProductService.Get")] // sadece Get yazarsak cache içinde get içeren her şeyi; farklı bir Service yani Manager'dan olsa bile siler.
         public IResult Add(Product product)
         {
             IResult result = BusinessRules.Run(
@@ -73,6 +78,7 @@ namespace Business.Concrete
             return new SuccessResult(Messages.ProductAdded);
         }
 
+        [CacheAspect] // key: Business.Concrete.ProductManager.GetAll, parametre var ise parantez içinde yanına eklenir + value:
         public IDataResult<List<Product>> GetAll()
         {
             // İş kodları (if şöyle ise...)
@@ -88,6 +94,8 @@ namespace Business.Concrete
             return new SuccessDataResult<List<Product>>(_productDal.GetAll(p => p.CategoryId == id));
         }
 
+        [CacheAspect]
+        //[PerformanceAspect(5)] // bu aspect içinde stopwatch bizden interval değer istemişti, inteval verdiğimiz 5'tir. çalışması 5 saniyeyi geçerse uyarır.
         public IDataResult<Product> GetById(int productId)
         {
             return new SuccessDataResult<Product>(_productDal.Get(p => p.ProductId == productId));
@@ -108,6 +116,7 @@ namespace Business.Concrete
         }
 
         [ValidationAspect(typeof(ProductValidator))]
+        [CacheRemoveAspect("IProductService.Get")] // sadece Get yazarsak cache içinde get içeren her şeyi; farklı bir Service yani Manager'dan olsa bile siler.
         public IResult Update(Product product)
         {
             if (CheckIfProductCountOfCategoryCorrect(product.CategoryId).Success)
@@ -117,6 +126,18 @@ namespace Business.Concrete
                 return new SuccessResult(Messages.ProductAdded);
             }
             return new ErrorResult();
+        }
+
+        //[TransactionScopeAspect] // işlem hata verirse eklemez geri alır.
+        public IResult AddTransactionalTest(Product product)
+        {
+            Add(product);
+            if (product.UnitPrice < 10)
+            {
+                throw new Exception("");
+            }
+            Add(product);
+            return null;
         }
 
 

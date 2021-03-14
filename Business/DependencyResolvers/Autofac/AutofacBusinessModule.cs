@@ -30,9 +30,6 @@ namespace Business.DependencyResolvers.Autofac
             builder.RegisterType<AuthManager>().As<IAuthService>();
             builder.RegisterType<JwtHelper>().As<ITokenHelper>();
 
-            //14. Ders sonu aldığımız hata için ekledik.
-            //builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>();
-
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
 
             builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces()
