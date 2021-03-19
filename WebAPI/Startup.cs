@@ -47,6 +47,7 @@ namespace WebAPI
             //services.AddSingleton<IProductService,ProductManager>();
             //services.AddSingleton<IProductDal,EfProductDal>();
 
+            services.AddCors();
 
             //JWT
 
@@ -81,6 +82,8 @@ namespace WebAPI
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors(builder=>builder.WithOrigins("http://localhost:4200").AllowAnyHeader()); // bu adresten gelen her isteðe izin ver demek. frontend
 
             app.UseHttpsRedirection();
 
