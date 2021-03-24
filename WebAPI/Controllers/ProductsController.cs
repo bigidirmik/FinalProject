@@ -31,7 +31,7 @@ namespace WebAPI.Controllers
         {
             //Swagger - Hazır dökümantasyon imkanı sunar.
 
-            Thread.Sleep(5000);
+            Thread.Sleep(3000);
 
             var result = _productService.GetAll(); // Get yerine GetAll() yaptık.
             if (result.Success)
