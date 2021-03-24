@@ -56,6 +56,17 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
 
+        [HttpGet("getbycategory")]
+        public IActionResult GetByCategory(int categoryId) // Get yerine GetById() yaptık.
+        {
+            var result = _productService.GetAllByCategoryId(categoryId);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
         [HttpPost("add")] // silme ve güncelleme için de çoğunlukla bu kullanılır. // tercihen silme için httpdelete güncelleme için put kullanabilirsin.
         public IActionResult Add(Product product) //POST ekleyeciğimiz şey product olduğu için belirttik // Post yerine Add() yaptık.
         {
