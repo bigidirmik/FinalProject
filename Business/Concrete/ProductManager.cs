@@ -57,7 +57,7 @@ namespace Business.Concrete
         //Bu koda da gerek kalmadı, metot üzerinde ValidationAspect olarak aynı şeyi yaptık.
         // Claim
         
-        //[SecuredOperation("product.add,admin")]
+        [SecuredOperation("product.add,admin")]
         [ValidationAspect(typeof(ProductValidator))]
         [CacheRemoveAspect("IProductService.Get")] // sadece Get yazarsak cache içinde get içeren her şeyi; farklı bir Service yani Manager'dan olsa bile siler.
         public IResult Add(Product product)
